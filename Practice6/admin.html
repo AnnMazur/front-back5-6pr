@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Админ</title>
+    <style>
+      body {
+        font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+        width: 1000px;
+        margin: 0 auto;
+        background-color: #8a6d4e;
+      }
+      h1 {
+        font-size: 4rem;
+        text-align: center;
+      }
+      h2 {
+        color: #333;
+      }
+
+      .container {
+        max-width: 800 px;
+        margin: 5%;
+        background: #e9f9f1;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      input,
+      textarea {
+        width: 100%;
+        padding: 10px;
+        margin: 5px 0;
+        border: 1px solid #e9f9f1;
+        border-radius: 5px;
+        box-sizing: border-box;
+      }
+
+      button {
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 100%;
+        margin-top: 10px;
+        background-color: #8a6d4e;
+        color: white;
+      }
+      button:hover {
+        background-color: #33281d;
+      }
+      .button-container {
+        display: flex;
+        gap: 10px;
+      }
+
+      .button-container button {
+        padding: 5px 10px;
+      }
+
+      .product {
+        border: 2px solid #09290b;
+        border-radius: 5px;
+        background-color: whitesmoke;
+        padding: 10px;
+        margin-bottom: 10px; /* Отступ между карточками */
+        transition: all 0.3s ease;
+      }
+
+      .product:hover {
+        transform: scale(1.05); /* Увеличение контейнера при наведении */
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+      }
+
+      /* Заголовок товара */
+      .product h2 {
+        margin: 5px 0;
+        color: #09290b;
+        line-height: 1.2; /* увеличение межстрочного интервала */
+        letter-spacing: 0.5px; /* раздвижение букв */
+      }
+
+      /* Текстовые блоки внутри карточки */
+      .product p {
+        margin: 5px 0; /* отступ между параграфами */
+        line-height: 1.3; /* высота строки*/
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Панель администратора</h1>
+    </header>
+
+    <div class="container">
+      <h2>Добавить новый объект</h2>
+      <form id="productForm">
+        <input type="text" id="name" placeholder="Название" required /><br />
+        <input type="text" id="price" placeholder="Цена" required /><br />
+        <textarea id="description" placeholder="Описание"></textarea><br />
+        <input type="text" id="categories" placeholder="Категории" /><br />
+        <button type="submit">Добавить</button>
+      </form>
+    </div>
+    <div class="container">
+      <h2>Дома в наличии</h2>
+      <div id="productList"></div>
+    </div>
+  </body>
+
+  <script>
+    const API_URL = "http://localhost:3000/products";
+
+    function loadProducts() {
+      fetch(API_URL) // GET-запрос на сервер для получения списка всех товаров
+        .then((response) => response.json()) //преобразует ответ в формат JSON
+        .then((products) => {
+          const productList = document.getElementById("productList"); 
+          productList.innerHTML = "";
+          products.forEach((product) => {
+            //для каждого товара создается новый элемент на странице.
+            const productElement = document.createElement("div");
+            productElement.classList.add("product"); //добавляется HTML-код
+            productElement.innerHTML = `  
+                  <b>${product.name}</b> - ${product.price} руб/сутки.
+                  <p>${product.description || "-"}</p>
+                  <p>Категории: ${product.categories?.join(", ") || "Нет"}</p>
+                  <div class="button-container">
+                      <button onclick="editProduct(${
+                        product.id
+                      })">Редактировать</button>
+                      <button onclick="deleteProduct(${
+                        product.id
+                      })">Удалить</button>
+                  </div>
+              `;
+            productList.appendChild(productElement); //элементы добавляются в DOM
+          });
+        })
+        .catch((error) => console.error("Ошибка при загрузке:", error));
+    }
+
+    document //обработка добавления заказа при отправке формы. Извлекаем значения и отправляем на сервер с помощью метода fetch и post
+      .getElementById("productForm")
+      .addEventListener("submit", function (e) {
+        e.preventDefault();
+        const name = document.getElementById("name").value;
+        const price = document.getElementById("price").value;
+        const description = document.getElementById("description").value;
+        const categories = document
+          .getElementById("categories")
+          .value.split(",")
+          .map((cat) => cat.trim());
+
+        fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, price, description, categories }),
+        })
+          .then(() => {
+            alert("Объект успешно добавлен!");
+            this.reset();
+            loadProducts();
+          })
+          .catch((error) => console.error("Ошибка при загрузке:", error));
+      });
+
+    function deleteProduct(id) {
+      if (confirm("Удалить?")) {
+        fetch(`${API_URL}/${id}`, { method: "DELETE" })
+          .then(() => loadProducts())
+          .catch((error) => console.error("Ошибка при удалении:", error));
+      }
+    }
+
+    function editProduct(id) {
+      const newName = prompt("Введите название:");
+      const newPrice = prompt("Введите цену:");
+
+      if (newName && newPrice) {
+        fetch(`${API_URL}/${id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name: newName, price: newPrice }),
+        })
+          .then(() => loadProducts())
+          .catch((error) => console.error("Ошибка при редактировании:", error));
+      }
+    }
+
+    loadProducts(); //загрузка товаров на страницу
+  </script>
+</html>

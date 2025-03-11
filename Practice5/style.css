@@ -1,0 +1,73 @@
+html {
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+body {
+  width: 800px;
+  margin: 0 auto;
+  background-color: #8a6d4e;
+}
+
+h1,
+h2 {
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+h1 {
+  font-size: 4rem;
+  text-align: center;
+}
+
+header p {
+  font-size: 1.3rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+
+section article {
+  width: 33%;
+  float: left;
+}
+
+h2 {
+  font-size: 2.5rem;
+  letter-spacing: -5px;
+  margin-bottom: 10px;
+}
+
+.container {
+  max-width: 800px;
+  margin: 10px auto;
+  padding: 15px;
+  border-radius: 5px;
+}
+
+/* Карточки */
+.product {
+  border: 2px solid #09290b; 
+  border-radius: 5px;
+  background-color: #e9f9f1; 
+  padding: 10px;
+  margin-bottom: 10px; /* Отступ между карточками */
+  transition: all 0.3s ease;
+}
+
+.product:hover {
+  transform: scale(1.05); /* Увеличение контейнера при наведении */
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4); /* Тень */
+}
+
+/* Заголовок товара */
+.product h2 {
+  margin: 5px 0; /* Уменьшаем отступы */
+  color: #09290b;
+  line-height: 1.2; /* увеличение межстрочного интервала */
+  letter-spacing: 0.5px; /* раздвижение букв */
+}
+
+/* Текстовые блоки внутри карточки */
+.product p {
+  margin: 5px 0; /* отступ между параграфами */
+  line-height: 1.3; /* высота строки*/
+}
