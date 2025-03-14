@@ -1,5 +1,5 @@
 html {
-  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
 }
 
 body {
@@ -10,7 +10,7 @@ body {
 
 h1,
 h2 {
-  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
 }
 
 h1 {
@@ -23,7 +23,6 @@ header p {
   font-weight: bold;
   text-align: center;
 }
-
 
 section article {
   width: 33%;
@@ -45,9 +44,9 @@ h2 {
 
 /* Карточки */
 .product {
-  border: 2px solid #09290b; 
+  border: 2px solid #09290b;
   border-radius: 5px;
-  background-color: #e9f9f1; 
+  background-color: #e9f9f1;
   padding: 10px;
   margin-bottom: 10px; /* Отступ между карточками */
   transition: all 0.3s ease;
@@ -70,4 +69,47 @@ h2 {
 .product p {
   margin: 5px 0; /* отступ между параграфами */
   line-height: 1.3; /* высота строки*/
+}
+
+#chat {
+  position: fixed;
+  bottom: 20px;
+  right: 10px;
+  width: 290px;
+  background-color: #e9f9f1;
+  border: 1px solid #09290b;
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4); /* Тень */
+}
+
+#chat h2 {
+  font-size: 18px;
+  padding-bottom: 10px;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+#chatContainer {
+  max-height: 500px;
+  overflow-y: auto;
+  margin-bottom: 10px;
+}
+#chatInput {
+  width: 93%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+button {
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 10px;
+  background-color: #8a6d4e;
+  color: white;
+}
+button:hover {
+  background-color: #33281d;
 }
