@@ -7,9 +7,9 @@ servers:
 paths:
   /tasks:
     get:
-      summary: Получить список задач
+      summary: Получить список всех товаров
       responses:
-        '200':
+        "200":
           description: Успешный ответ
           content:
             application/json:
@@ -26,7 +26,7 @@ paths:
                       type: boolean
 
     post:
-      summary: Создать новую задачу
+      summary: Создать новый товар
       requestBody:
         required: true
         content:
@@ -39,21 +39,20 @@ paths:
                 completed:
                   type: boolean
       responses:
-        '201':
-          description: Задача создана
-
+        "201":
+          description: Товар создан
   /tasks/{id}:
     get:
-      summary: Получить задачу по ID
+      summary: Получить товар по ID
       parameters:
         - name: id
           in: path
           required: true
-          description: ID задачи
+          description: ID товара
           schema:
             type: integer
       responses:
-        '200':
+        "200":
           description: Успешный ответ
           content:
             application/json:
@@ -66,14 +65,14 @@ paths:
                     type: string
                   completed:
                     type: boolean
-    
+
     put:
-      summary: Обновить задачу по ID
+      summary: Обновить товар по ID
       parameters:
         - name: id
           in: path
           required: true
-          description: ID задачи
+          description: ID товара
           schema:
             type: integer
       requestBody:
@@ -88,11 +87,11 @@ paths:
                 completed:
                   type: boolean
       responses:
-        '200':
-            description: Задача обновлена
-  
+        "200":
+          description: Товар обновлен
+
     delete:
-      summary: Удалить задачу по ID
+      summary: Удалить товар по ID
       parameters:
         - name: id
           in: path
@@ -101,5 +100,5 @@ paths:
           schema:
             type: integer
       responses:
-        '204':
-          description: Задача удалена
+        "204":
+          description: Товар удален

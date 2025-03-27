@@ -5,7 +5,7 @@ html {
 body {
   width: 800px;
   margin: 0 auto;
-  background-color: #8a6d4e;
+  background-color: #b59b8b;
 }
 
 h1,
@@ -34,13 +34,15 @@ h2 {
   letter-spacing: -5px;
   margin-bottom: 10px;
 }
-
 .container {
-  max-width: 800px;
-  margin: 10px auto;
-  padding: 15px;
-  border-radius: 5px;
+  max-width: 800 px;
+  margin: 5%;
+  background: #e9f9f1;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
+
 
 /* Карточки */
 .product {
@@ -112,4 +114,65 @@ button {
 }
 button:hover {
   background-color: #33281d;
+}
+
+
+input,
+textarea {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  border: 1px solid #e9f9f1;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+button {
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 10px;
+  background-color: #8a6d4e;
+  color: white;
+}
+button:hover {
+  background-color: #33281d;
+}
+.button-container {
+  display: flex;
+  gap: 10px;
+}
+
+.button-container button {
+  padding: 5px 10px;
+}
+
+.product {
+  border: 2px solid #09290b;
+  border-radius: 5px;
+  background-color: whitesmoke;
+  padding: 10px;
+  margin-bottom: 10px; /* Отступ между карточками */
+  transition: all 0.3s ease;
+}
+
+.product:hover {
+  transform: scale(1.05); /* Увеличение контейнера при наведении */
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+}
+
+/* Заголовок товара */
+.product h2 {
+  margin: 5px 0;
+  color: #09290b;
+  line-height: 1.2; /*межстрочный интервала*/
+  letter-spacing: 0.5px; /* раздвижение букв */
+}
+
+/* Текстовые блоки внутри карточки */
+.product p {
+  margin: 5px 0; /* отступ между параграфами */
+  line-height: 1.3; /* высота строки*/
 }

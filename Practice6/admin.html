@@ -78,7 +78,7 @@
       .product h2 {
         margin: 5px 0;
         color: #09290b;
-        line-height: 1.2; /* увеличение межстрочного интервала */
+        line-height: 1.2; /*межстрочный интервала*/
         letter-spacing: 0.5px; /* раздвижение букв */
       }
 
@@ -99,7 +99,7 @@
       <form id="productForm">
         <input type="text" id="name" placeholder="Название" required /><br />
         <input type="text" id="price" placeholder="Цена" required /><br />
-        <textarea id="description" placeholder="Описание"></textarea><br />
+        <input type="text" id="description" placeholder="Описание" /><br />
         <input type="text" id="categories" placeholder="Категории" /><br />
         <button type="submit">Добавить</button>
       </form>
@@ -233,20 +233,21 @@
       const messageElement = document.createElement("p");
 
       messageElement.classList.add(type);
-      
+
       if (type == "outgoing") {
-      try {
-        const data = JSON.parse(message);
-          messageElement.textContent = "Я: " + data.text;
-       } catch (error) {
-        messageElement.textContent = "Я: " + message;
-      } } else {
         try {
-        const data = JSON.parse(message);
+          const data = JSON.parse(message);
+          messageElement.textContent = "Я: " + data.text;
+        } catch (error) {
+          messageElement.textContent = "Я: " + message;
+        }
+      } else {
+        try {
+          const data = JSON.parse(message);
           messageElement.textContent = "Клиент: " + data.text;
-       } catch (error) {
-        messageElement.textContent = "клиент: " + message;
-      }
+        } catch (error) {
+          messageElement.textContent = "клиент: " + message;
+        }
       }
 
       chatContainer.appendChild(messageElement);

@@ -19,9 +19,7 @@
       <input type="text" id="chatInput" placeholder="Введите сообщение..." />
       <button onclick="sendMessage()">Отправить</button>
     </section>
-  </body>
-
-  <!--- СКРИПТ ДЛЯ ПР 5-6-
+    <!--- СКРИПТ ДЛЯ ПР 5-6--
   <script>
     const API_URL = "http://localhost:3000/products";
     function loadProducts() {
@@ -53,11 +51,11 @@
     loadProducts();
   </script>
 -->
-  <!--СКРИПТ ДЛЯ ПР 7-8----------->
-  <script>
-    const API_URL = "http://localhost:3000/graphql";
+    <!--СКРИПТ ДЛЯ ПР 7-8----------->
+    <script>
+      const API_URL = "http://localhost:3000/graphql";
 
-    const query = `
+      const query = `
         query {
           products {
             name
@@ -67,93 +65,97 @@
         }
       `;
 
-    function loadProducts() {
-      fetch(API_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          query: query,
-        }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          const products = data.data.products;
-          const productList = document.getElementById("productList");
-          productList.innerHTML = "";
+      function loadProducts() {
+        fetch(API_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            query: query,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            const products = data.data.products;
+            const productList = document.getElementById("productList");
+            productList.innerHTML = "";
 
-          products.forEach((product) => {
-            const productElement = document.createElement("div");
-            productElement.classList.add("product");
-            productElement.innerHTML = `
+            products.forEach((product) => {
+              const productElement = document.createElement("div");
+              productElement.classList.add("product");
+              productElement.innerHTML = `
               <h2>${product.name}</h2>
               <p><strong>Цена:</strong> ${product.price} руб/сутки.</p>
               <p><strong>Категория:</strong> ${product.categories.join(
                 ", "
               )}</p>
             `;
-            productList.appendChild(productElement);
-          });
-        })
-        .catch((error) => console.error("Ошибка при загрузке:", error));
-    }
-
-    loadProducts();
-
-    const socket = new WebSocket("ws://localhost:8080");
-
-    socket.onopen = () => {
-      console.log("Админ подключен к WebSocket серверу");
-    };
-
-    socket.onmessage = (event) => {
-      try {
-        const data = JSON.parse(event.data); // Преобразуем JSON-строку в объект
-        displayMessage(data.text, "incoming"); // Отображаем входящее сообщение
-      } catch (error) {
-        console.error("Ошибка обработки сообщения:", error);
+              productList.appendChild(productElement);
+            });
+          })
+          .catch((error) => console.error("Ошибка при загрузке:", error));
       }
-    };
 
-    socket.onclose = () => {
-      console.log("WebSocket соединение закрыто");
-    };
+      loadProducts();
 
-    function sendMessage() {
-      const input = document.getElementById("chatInput");
-      const message = input.value.trim();
+      const socket = new WebSocket("ws://localhost:8080");
 
-      if (message) {
-        socket.send(JSON.stringify({ text: message }));
-        displayMessage(message, "outgoing");
-        input.value = "";
-      }
-    }
+      socket.onopen = () => {
+        console.log("Админ подключен к WebSocket серверу");
+      };
 
-    function displayMessage(message, type) {
-      const chatContainer = document.getElementById("chatContainer");
-      const messageElement = document.createElement("p");
-
-      messageElement.classList.add(type);
-
-      if (type == "outgoing") {
+      socket.onmessage = (event) => {
         try {
-          const data = JSON.parse(message);
-          messageElement.textContent = "Я: " + data.text;
+          const data = JSON.parse(event.data); // Преобразуем JSON-строку в объект
+          displayMessage(data.text, "incoming"); // Отображаем входящее сообщение
         } catch (error) {
-          messageElement.textContent = "Я: " + message;
+          console.error("Ошибка обработки сообщения:", error);
         }
-      } else {
-        try {
-          const data = JSON.parse(message);
-          messageElement.textContent = "Админ: " + data.text;
-        } catch (error) {
-          messageElement.textContent = "Админ: " + message;
+      };
+
+      socket.onclose = () => {
+        console.log("WebSocket соединение закрыто");
+      };
+
+      function sendMessage() {
+        const input = document.getElementById("chatInput");
+        const message = input.value.trim();
+
+        if (message) {
+          socket.send(JSON.stringify({ text: message }));
+          displayMessage(message, "outgoing");
+          input.value = "";
         }
       }
 
-      chatContainer.appendChild(messageElement);
-    }
-  </script>
+      function displayMessage(message, type) {
+        const chatContainer = document.getElementById("chatContainer");
+        const messageElement = document.createElement("p");
+
+        messageElement.classList.add(type);
+
+        if (type == "outgoing") {
+          try {
+            const data = JSON.parse(message);
+            messageElement.textContent = "Я: " + data.text;
+          } catch (error) {
+            messageElement.textContent = "Я: " + message;
+          }
+        } else {
+          try {
+            const data = JSON.parse(message);
+            messageElement.textContent = "Админ: " + data.text;
+          } catch (error) {
+            messageElement.textContent = "Админ: " + message;
+          }
+        }
+
+        chatContainer.appendChild(messageElement);
+      }
+    </script>
+    <div id="root"></div>
+    <!--реакт рендерит приложение-->
+    <script type="module" src="/src/index.jsx"></script>
+  </body>
 </html>

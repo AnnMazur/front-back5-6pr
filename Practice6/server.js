@@ -1,18 +1,20 @@
-const { ApolloServer, gql } = require('apollo-server-express'); // Для GraphQL
+const { ApolloServer, gql } = require("apollo-server-express"); // Для GraphQL
 const express = require("express"); // Для создания сервера
 const bodyParser = require("body-parser"); // Для парсинга запросов
 const path = require("path"); // Для работы с путями файлов
 const fs = require("fs"); // Для работы с файловой системой
-const WebSocket = require('ws'); // Подключаем WebSocket
-
+const WebSocket = require("ws"); // Подключаем WebSocket
 
 const app = express();
+
 // Чтение данных из JSON
 const loadProducts = () => {
   try {
+    const filePath = path.join(__dirname, "products.json");
     const data = fs.readFileSync(dataFilePath, "utf8");
     return JSON.parse(data);
   } catch (err) {
+    console.error("Ошибка при чтении файла: ", error);
     return []; // Если файла нет, возвращаем пустой массив
   }
 };
@@ -20,6 +22,7 @@ const loadProducts = () => {
 // Запись данных в JSON
 const saveProducts = (data) => {
   try {
+    const filePath = path.join(__dirname, "products.json");
     fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2), "utf8");
   } catch (error) {
     console.error("Ошибка при сохранении: ", error);
@@ -45,8 +48,8 @@ const typeDefs = gql`
 const resolvers = {
   Query: {
     products: () => loadProducts(),
-    product: (_, { id }) => loadProducts().find(p => p.id == id),
-  }
+    product: (_, { id }) => loadProducts().find((p) => p.id == id),
+  },
 };
 
 const PORT = 3000;
@@ -125,7 +128,9 @@ async function startServer() {
       product.price =
         req.body.price !== undefined ? req.body.price : product.price;
       product.categories =
-        req.body.categories !== undefined ? req.body.categories : product.categories;
+        req.body.categories !== undefined
+          ? req.body.categories
+          : product.categories;
       saveProducts(products); // Сохраняем изменения в JSON
       res.json(product);
     } else {
@@ -140,7 +145,7 @@ async function startServer() {
     if (newProducts.length !== products.length) {
       products = newProducts;
       saveProducts(products); // Сохраняем изменения в JSON
-      res.status(204).send(); // Код 204 указывает на успешный запрос без контента
+      res.status(204).send(); // Код 204 указывает на успешный запрос
     } else {
       res.status(404).json({ message: "Продукт не найден" });
     }
@@ -163,30 +168,27 @@ async function startServer() {
 
   const wss = new WebSocket.Server({ port: 8080 }); // WebSocket-сервер на порту 8080
 
-wss.on('connection', (ws) => {
-    console.log('Новое подключение к WebSocket серверу');
+  wss.on("connection", (ws) => {
+    console.log("Новое подключение к WebSocket серверу");
 
-    ws.on('message', (message) => {
-      console.log('Сообщение получено:', message.toString());
-  
+    ws.on("message", (message) => {
+      console.log("Сообщение получено:", message.toString());
+
       // Отправляем сообщение всем клиентам в формате JSON
-      wss.clients.forEach(client => {
-          if (client !== ws && client.readyState === WebSocket.OPEN) {
-              client.send(JSON.stringify({ text: message.toString() })); // Отправляем JSON
-          }
+      wss.clients.forEach((client) => {
+        if (client !== ws && client.readyState === WebSocket.OPEN) {
+          client.send(JSON.stringify({ text: message.toString() })); // Отправляем JSON
+        }
       });
-  });
-  
-
-    ws.on('close', () => {
-        console.log('Клиент отключился');
     });
-});
 
-console.log('WebSocket сервер запущен на ws://localhost:8080');
+    ws.on("close", () => {
+      console.log("Клиент отключился");
+    });
+  });
+
+  console.log("WebSocket сервер запущен на ws://localhost:8080");
 }
 
 // Запуск сервера
 startServer();
-
-
