@@ -7,6 +7,7 @@ import {
   updateProduct,
 } from "./features/productsSlice";
 
+
 function App() {
   console.log("Компонент App рендерится");
   const dispatch = useDispatch();
@@ -22,6 +23,11 @@ function App() {
   const [newProductCategories, setNewProductCategories] = useState("");
   const [editProduct, setEditProduct] = useState(null);
 
+  const theme = useSelector((state) => state.theme.mode);
+  const handleToggleTheme = () => {
+    dispatch(toggleTheme());
+  };
+
   useEffect(() => {
     console.log("UseEffect запустился");
     console.log("Запрашиваем товары с сервера...");
@@ -36,14 +42,21 @@ function App() {
 
   // Функция добавления товара
   const handleAddProduct = () => {
-    if (!newProductName.trim() || !newProductPrice.trim() || !newProductCategories.trim()) return;
+    if (
+      !newProductName.trim() ||
+      !newProductPrice.trim() ||
+      !newProductCategories.trim()
+    )
+      return;
 
     const newProduct = {
       id: Date.now().toString(),
       name: newProductName,
       price: parseFloat(newProductPrice), // Преобразуем строку в число
       description: newProductDescription,
-      categories: newProductCategories.split(",").map((category) => category.trim()), // Разделение категорий по запятой
+      categories: newProductCategories
+        .split(",")
+        .map((category) => category.trim()), // Разделение категорий по запятой
     };
 
     dispatch(addProduct(newProduct));
@@ -72,7 +85,11 @@ function App() {
   };
 
   return (
-    <div class="container">
+      <div className={theme}>
+      <button onClick={handleToggleTheme}>
+      {theme === "light" ? "Тёмная тема" : "Светлая тема"}
+      </button>
+
       <h1>Список товаров</h1>
 
       {/* Форма для добавления товара */}
@@ -105,7 +122,7 @@ function App() {
 
       {/* Форма редактирования товара */}
       {editProduct && (
-        <div>
+        <div class="productForm">
           <h3>Редактирование товара</h3>
           <input
             type="text"
@@ -150,11 +167,14 @@ function App() {
       <div class="productList">
         {products.map((product) => (
           <div class="product" key={product.id}>
-            {product.name} - {product.price} ₽
-            <p>{product.description}</p>
+            {product.name} - {product.price} ₽<p>{product.description}</p>
             <p>Категории: {product.categories.join(", ")}</p>
-            <button onClick={() => handleEditClick(product)}>Редактировать</button>
-            <button onClick={() => handleDeleteProduct(product.id)}>Удалить</button>
+            <button onClick={() => handleEditClick(product)}>
+              Редактировать
+            </button>
+            <button onClick={() => handleDeleteProduct(product.id)}>
+              Удалить
+            </button>
           </div>
         ))}
       </div>

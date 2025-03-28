@@ -1,0 +1,28 @@
+.light {
+  background-color: #dac6b1;
+  color: #000000;
+}
+.dark {
+  background-color: #2e2b2b;
+  color: #dac6b1;
+}
+.dark button {
+  border: 1px solid white;
+  background-color: #dccebf;
+  color: black;
+}
+.light button {
+  border: 1px solid black;
+  background-color: #8a6d4e;
+  color: white;
+}
+.light button:hover {
+  background-color: #33281d;
+}
+.dark button:hover {
+  background-color: #f5ebe1;
+}
+
+.light.container {
+  background: #e9f9f1;
+}
