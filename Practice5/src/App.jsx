@@ -15,11 +15,14 @@ function App() {
     status,
     error,
   } = useSelector((state) => state.products);
+
   const [newProductName, setNewProductName] = useState("");
+  const [newProductPrice, setNewProductPrice] = useState("");
+  const [newProductDescription, setNewProductDescription] = useState("");
+  const [newProductCategories, setNewProductCategories] = useState("");
   const [editProduct, setEditProduct] = useState(null);
+
   useEffect(() => {
-    //dispatch(fetchProducts()); // Загружаем товары при запуске
-    // }, [dispatch]);
     console.log("UseEffect запустился");
     console.log("Запрашиваем товары с сервера...");
     dispatch(fetchProducts())
@@ -33,41 +36,73 @@ function App() {
 
   // Функция добавления товара
   const handleAddProduct = () => {
-    if (!newProductName.trim()) return;
+    if (!newProductName.trim() || !newProductPrice.trim() || !newProductCategories.trim()) return;
+
     const newProduct = {
       id: Date.now().toString(),
       name: newProductName,
-      price: Math.floor(Math.random() * 100000), // Случайная цена
+      price: parseFloat(newProductPrice), // Преобразуем строку в число
+      description: newProductDescription,
+      categories: newProductCategories.split(",").map((category) => category.trim()), // Разделение категорий по запятой
     };
+
     dispatch(addProduct(newProduct));
-    setNewProductName(""); // Очищаем поле
+    setNewProductName("");
+    setNewProductPrice("");
+    setNewProductDescription("");
+    setNewProductCategories("");
   };
-  //ф-ция для начала редактирования
+
+  // Функция для начала редактирования
   const handleEditClick = (product) => {
     setEditProduct(product);
   };
-  //Функция для сохранения изменений:
+
+  // Функция для сохранения изменений
   const handleSaveEdit = () => {
     if (editProduct) {
       dispatch(updateProduct(editProduct));
       setEditProduct(null);
     }
   };
+
   // Функция удаления товара
   const handleDeleteProduct = (id) => {
     dispatch(deleteProduct(id));
   };
+
   return (
-    <div>
+    <div class="container">
       <h1>Список товаров</h1>
+
       {/* Форма для добавления товара */}
-      <input
-        type="text"
-        value={newProductName}
-        onChange={(e) => setNewProductName(e.target.value)}
-        placeholder="Введите название товара"
-      />
-      <button onClick={handleAddProduct}>Добавить</button>
+      <div class="productForm">
+        <input
+          type="text"
+          value={newProductName}
+          onChange={(e) => setNewProductName(e.target.value)}
+          placeholder="Название товара"
+        />
+        <input
+          type="number"
+          value={newProductPrice}
+          onChange={(e) => setNewProductPrice(e.target.value)}
+          placeholder="Цена"
+        />
+        <textarea
+          value={newProductDescription}
+          onChange={(e) => setNewProductDescription(e.target.value)}
+          placeholder="Описание"
+        />
+        <input
+          type="text"
+          value={newProductCategories}
+          onChange={(e) => setNewProductCategories(e.target.value)}
+          placeholder="Категории товара"
+        />
+        <button onClick={handleAddProduct}>Добавить</button>
+      </div>
+
       {/* Форма редактирования товара */}
       {editProduct && (
         <div>
@@ -86,27 +121,45 @@ function App() {
               setEditProduct({ ...editProduct, price: Number(e.target.value) })
             }
           />
+          <textarea
+            value={editProduct.description}
+            onChange={(e) =>
+              setEditProduct({ ...editProduct, description: e.target.value })
+            }
+          />
+          <input
+            type="text"
+            value={editProduct.categories.join(", ")}
+            onChange={(e) =>
+              setEditProduct({
+                ...editProduct,
+                categories: e.target.value.split(",").map((cat) => cat.trim()),
+              })
+            }
+          />
           <button onClick={handleSaveEdit}>Сохранить</button>
           <button onClick={() => setEditProduct(null)}>Отмена</button>
         </div>
       )}
-      <button onClick={() => handleEditClick(product)}>Редактировать</button>
 
       {/* Статусы загрузки */}
       {status === "loading" && <p>Загрузка товаров...</p>}
       {status === "failed" && <p>Ошибка: {error}</p>}
+
       {/* Список товаров */}
-      <ul>
+      <div class="productList">
         {products.map((product) => (
-          <li key={product.id}>
+          <div class="product" key={product.id}>
             {product.name} - {product.price} ₽
-            <button onClick={() => handleDeleteProduct(product.id)}>
-              Удалить
-            </button>
-          </li>
+            <p>{product.description}</p>
+            <p>Категории: {product.categories.join(", ")}</p>
+            <button onClick={() => handleEditClick(product)}>Редактировать</button>
+            <button onClick={() => handleDeleteProduct(product.id)}>Удалить</button>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 }
+
 export default App;

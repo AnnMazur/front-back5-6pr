@@ -4,8 +4,10 @@ const bodyParser = require("body-parser"); // Для парсинга запро
 const path = require("path"); // Для работы с путями файлов
 const fs = require("fs"); // Для работы с файловой системой
 const WebSocket = require("ws"); // Подключаем WebSocket
+const cors = require("cors");
 
 const app = express();
+app.use(cors());
 
 // Чтение данных из JSON
 const loadProducts = () => {
